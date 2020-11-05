@@ -30,40 +30,35 @@ letters = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
 
 
 
-## Open the file, randomly select a line as our phrase for the game
-## Close the file and return the randomly selected line
+## First, this opens the file and randomly select a line as our phrase for the game
+## Than, the file is closed and the randomly selected line is returned
 def get_phrase():
-    wheel_file = open("wheeloffortune.txt","r")
-    #Find and open list of phrases
+    wheel_file = open("wheeloffortune.txt","r")    #Find and open list of phrases
     
     wheelall = wheel_file.readlines()
-    random.shuffle(wheelall)
-    #Assign random line numbers
+    random.shuffle(wheelall)    #Assign random line numbers
     
-    wheelline = wheelall[0].rstrip()
-    #Find a random line
+    wheelline = wheelall[0].rstrip() #Find a random line
     
     count = wheelline.index(":")
     
-    global phrase
-    #Phrase will be used later
+    global phrase #Set phrase as a global variable
     phrase = ""
-    for p in wheelline[count+1::]:
-        #Separate phrase from clue
+    for p in wheelline[count+1::]:  #Separate phrase from clue
+        
+        # Add spaces to phrase:
         phrase += " "
         phrase += p
         phrase += " "
-        # Add spaces to phrase
+        
     
-    global clue  
-    #Clue will be used later
+    global clue  #Set clue as a gloabl variable
+    
     clue = wheelline[:count:]
     #Grab clue text
     
-    wheel_file.close()
-    #Close the file
-    return
-    #End the function
+    wheel_file.close() #Close the file
+    return #End the function
 
 ## Steps to take:
 ## Get the randomly selected phrase
@@ -79,190 +74,167 @@ def get_phrase():
 
 
 def play_game(logging=False):
-    get_phrase()
-    #Run the get phrase function
-    user_name = input("What is your name?")
-    #Determine name
-    game = True
-    #Emergency brake for while loop later used in game
-    puzzle = ""
-    #Assign variable for puzzle
+    get_phrase() #Run the get phrase function
+    
+    user_name = input("What is your name?") #Determine name
+    
+    game = True #Break variable for while loop later used in game
+    
+    puzzle = "" #Assign variable for puzzle
+    
     
     for i in phrase:
-        if i in letters:
+        if i in letters: #Create blank puzzle out of underscore characters
             puzzle += "_"
-            #Create blank puzzle out of underscore characters
             
-        else:
+            
+        else: #Insert spaces around any character not a letter.
             puzzle += ""
             puzzle += i
             puzzle += ""
-            #Insert spaces around any character not a letter.
-        bankroll = 0
-        #Starting money
+            
+        bankroll = 0 #Starting money
         
-        
-    letters_guessed = ""
-    #Assign variable for guessed letters
+    letters_guessed = "" #Assign variable for guessed letters
     
-    while game == True:
-        #Dangerous loop (Hence emergency brake built into all outcomes)
-        
-        
+    while game == True: #Dangerous loop! (Hence break variable built into all outcomes)
             
         print(user_name,"your current puzzle progress is",puzzle,"and you have guessed",letters_guessed,".")
         quit = input("Would you like to quit? Enter Y or N.\n")
-        if quit in "Yy":
+        if quit in "Yy": #Check for quit
             print("Thanks for playing,",user_name,"! The phrase was: ",phrase)
             game == False
             return
-        #Check for quit
+        
         
         else:
             
-            print("Here are the letters you have guessed so far,",user_name,":",letters_guessed,"\n")
-            #Show guessed letters
+            print("Here are the letters you have guessed so far,",user_name,":",letters_guessed,"\n") #Show guessed letters
             
-            print("You have",bankroll,"dollars in your bankroll","\n")
-            #Show money accumulated
+            print("You have",bankroll,"dollars in your bankroll","\n")  #Show money accumulated
+           
+            print("Your clue is:",clue,"\n") #Show clue
             
-            print("Your clue is:",clue,"\n")
-            #Show clue
+            print("Current Progress:",puzzle,"\n") #Show puzzle progress
             
-            print("Current Progress:",puzzle,"\n")
-            #Show puzzle progress
+            print("Spinnging wheel.........now.\n") #Fun addition (serves no function except for the illusion of the program chugging/the wheel spinning in the background)
             
-            print("Spinnging wheel.........now.\n")
-            #Fun addition (serves no function except for the illusion of the program chugging in the background)
+            spin_wheel() #Call spin wheel function
             
-            spin_wheel()
-            #Call spin wheel function
-            
-            print("Landed on",lander)
-            #Give landed value
+            print("Landed on $",lander) #Give landed value
             
             if lander == "BANKRUPT":
 
                 print("Uh-oh! (Insert slide whistle) You got ",lander,"! Spin again and see if you can earn all that ",bankroll," dollars back!\n")
-                bankroll == 0
-                
-                
-                #Exception for bankrupcy result (log not cleared for this)
+                bankroll == 0 #Exception for bankrupcy result (log not cleared for this)
+
                 
             else:
 
                 solver = input("Would you like to solve the puzzle? If not hit enter, otherwise type in your guess. WARNING: IF YOU SOLVE INCORRECTLY, THE GAME WILL BE OVER\n")
-                solver = solver.upper()
-                #Check if user wants to solve
+                solver = solver.upper() #Check if user wants to solve
+                
 
 
-                if solver == "":
-                    #If not, continue
+                if solver == "": #If the user does not want to solve, continue
+                    
                     
                     print("What letter would you like to guess? Keep in mind you have to buy vowels (y not included).\n")
                     guesser = input("Please type your guess here\n")
-                    guesser = guesser.upper()
-                    #Interpret input guess
+                    guesser = guesser.upper() #Interpret input guess into uppercase
                     
-                    if guesser in "aeiouAEIOU":
+                    
+                    if guesser in "aeiouAEIOU":  #Vowel result
                         bankroll += 0
                         print("This roll of",bankroll,"is forfeited to buy the vowel")
-                        #Vowel result
+                       
 
-                        if guesser in phrase:
+                        if guesser in phrase: 
                             puzzle2 = ""
-                            count1 = -1
-                            #Assign temp variables
+                            count1 = -1 #Assign temp variables for this loop
+                            
                             
                             for i in phrase:
                                 count1 += 1
-                                if i == guesser:
+                                if i == guesser: # If the letter matches the guessed letter
                                     puzzle2 += i
                                 else:
-                                    puzzle2 += puzzle[count1]
-                                #Add guess to puzzle
+                                    puzzle2 += puzzle[count1] #Add guess to puzzle
+                                
                             letters_guessed += guesser
                             puzzle = puzzle2
 
-                        elif guesser not in phrase:
+                        elif guesser not in phrase: #Result if incorrect guess
                             print("Nooooo! That letter was not in the phrase!")
                             letters_guessed += guesser
-                            #Result if incorrect guess
+                            
                             
                         
                             
-                    elif guesser in "qwrtypsdfghjklzxcvbnmQWRTYPSDFGHJKLZXCVBNM" and guesser not in letters_guessed:
-                        #Consonant results tree
-
+                    elif guesser in "qwrtypsdfghjklzxcvbnmQWRTYPSDFGHJKLZXCVBNM" and guesser not in letters_guessed: #Consonant results tree
+                        
                         if guesser in phrase:
                             puzzle2 = ""
                             count2 = -1
-                            bankroll += lander
-                            #Result if guess is in the phrase
-                            for i in phrase:
+                            bankroll += lander 
+                            for i in phrase: #Result if guess is in the phrase
                                 count2 += 1
                   
                                 if i == guesser:
                                     puzzle2 += i
                   
-                                else:
+                                else: #Add letter to puzzle
                                     puzzle2 += puzzle[count2]
                             letters_guessed += guesser
                             puzzle = puzzle2
-                            #Add letter to puzzle
+                            
 
 
-                        elif guesser not in phrase:
+                        elif guesser not in phrase: #Result if incorrect guess
                             print("Nooooo! That letter was not in the phrase!")
                             letters_guessed += guesser
-                            #Result if incorrect guess
+                            
 
 
-                    elif guesser in "qwrtypsdfghjklzxcvbnmQWRTYPSDFGHJKLZXCVBNM" and guesser in letters_guessed:
+                    elif guesser in "qwrtypsdfghjklzxcvbnmQWRTYPSDFGHJKLZXCVBNM" and guesser in letters_guessed: #Check to see if letter has been guessed already
                         print("You already guessed that letter! Spin again!")
-                        #Check to see if letter has been guessed already
                         
-                    else:
+                        
+                    else: #Check if guess is not in alphabet
                         print("Please guess a letter!")
-                        #Check if guess is not in alphabet
+                        
 
-                elif solver == phrase:
-                    #Check if puzzle solved
-
-                    if lander != "BANKRUPT":
+                elif solver == phrase: #Check if puzzle solved
+                    
+                    if lander != "BANKRUPT": #Add final value
                         bankroll += int(lander)
-                        #Add final value
+                        
                         
                     print("Congratulations ",user_name," you won",bankroll,"dollars! Go ahead and spend them all in one place.")        
-                    game == False
-                    #End game, game is won
+                    game == False #End game, game is won
                     
-                    print("The phrase was",phrase)
-                    #Show the phrase
+                    
+                    print("The phrase was",phrase) #Show the phrase
                     
                     return
 
-                else:
-                    #Incorrect puzzle solution
-
+                else: #Incorrect puzzle solution guess
+                    
                     print("The phrase was,",phrase,"and you guessed",solver,":(. Better luck next time!")
-                    game == False
-                    #End game, game is lost
+                    game == False #End game, game is lost
+                    
                     
                     return
-                if puzzle == phrase:
-                    #Result if user wins through raw guessing power
+                if puzzle == phrase: #Result if user wins through raw smarts and guessing power
 
                     game == False
 
                     print("Congratulations",user_name,"you won",bankroll,"dollars! Go ahead and spend them all in one place.")
-                    print("The phrase was",phrase)
-                    #Show the phrase
+                    print("The phrase was",phrase) #Show the phrase
                     
                     return
                 if logging == False:
-                    clear_output()
-                    #Clear output between runs if stated
+                    clear_output() #Clear output between runs if logging is set to "True"
         
     pass
 
@@ -270,20 +242,15 @@ def play_game(logging=False):
 
 
 ##Return a random element of this list whenever spin_wheel() is called
-def spin_wheel():
-    wheel = [300,500,1000,1500,400,"BANKRUPT",2250,2500,200,100]
-    #Wheel values
+def spin_wheel(): #Randomized called value function
+    wheel = [300,500,1000,1500,400,"BANKRUPT",2250,2500,200,100] #Wheel values
     
-    wheel_val = random.randint(0,9)
-    #Random value generated
+    wheel_val = random.randint(0,9) #Random value generated
     
-    global lander
-    lander = wheel[wheel_val]
-    #Grab spin result
+    global lander #Create lander as a global variable for use in the game function
+    lander = wheel[wheel_val] #Grab spin result
     
-    return
-    #End function
+    return #End function without an output, since lander can be called at anytime in the game loop
 
 
-
-play_game(logging = True)
+play_game(logging = False) #Run the game without logging previous turns
