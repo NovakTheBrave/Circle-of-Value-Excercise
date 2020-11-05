@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# coding: utf-8
+#Nicholas Novak
+#Text-based Wheel of Fortune Game
 
 
 from IPython.display import clear_output
